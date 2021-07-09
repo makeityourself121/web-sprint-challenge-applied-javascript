@@ -1,4 +1,7 @@
+import axios from "axios"
+
 const Card = (article) => {
+  
   // TASK 5
   // ---------------------
   // Implement this function, which should return the markup you see below.
@@ -17,6 +20,36 @@ const Card = (article) => {
   //   </div>
   // </div>
   //
+
+  const card=document.createElement('div')
+  card.classList.add('card')
+
+  const headline=document.createElement('div')
+  headline.classList.add('headline')
+  headline.textContent=article.headline
+  card.appendChild(headline)
+
+  card.addEventListener('click', function(){
+    console.log(article.headline)
+  })
+
+  const author=document.createElement('div')
+  author.classList.add('author')
+  card.appendChild(author)
+
+  const img=document.createElement('div')
+  img.classList.add('img-container')
+  author.appendChild(img)
+ 
+  const photo=document.createElement('img')
+  photo.src=article.authorPhoto;
+  img.appendChild(photo)
+
+  const authorName=document.createElement('span')
+  authorName.textContent=`By ${article.authorName}`
+  author.appendChild(authorName)
+
+  return card
 }
 
 const cardAppender = (selector) => {
@@ -28,6 +61,40 @@ const cardAppender = (selector) => {
   // Create a card from each and every article object in the response, using the Card component.
   // Append each card to the element in the DOM that matches the selector passed to the function.
   //
+  const cards=document.querySelector(selector)
+  
+  axios.get('http://localhost:5000/api/articles')
+  .then((res)=>{
+    //console.log(res.data.articles)
+  
+    res.data.articles.javascript.forEach(e=>{
+    const card=Card(e)
+      cards.appendChild(card) 
+    })
+    res.data.articles.bootstrap.forEach(e=>{
+    const cardi=Card(e)
+      cards.appendChild(cardi) 
+    })
+    res.data.articles.technology.forEach(e=>{
+      const cardj=Card(e)
+        cards.appendChild(cardj) 
+      })
+      res.data.articles.jquery.forEach(e=>{
+        const cardk=Card(e)
+        cards.appendChild(cardk) 
+      })
+      res.data.articles.node.forEach(e=>{
+        const cardl=Card(e)
+        cards.appendChild(cardl) 
+      })
+     })
+  .catch(err=>{
+    console.log(err)
+  })
+  .finally(()=>{
+    console.log('done')
+  })
+  
 }
 
 export { Card, cardAppender }
